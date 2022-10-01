@@ -1,0 +1,150 @@
+Docker tutorial : https://medium.com/javarevisited/top-5-free-courses-to-learn-docker-for-beginners-best-of-lot-b2b1ad2b98ad
+
+
+Install nginx in linux
+root user access
+	wget https://nginx.org/keys/nginx_signing.key
+	
+	cd /etc/apt
+
+	nano sources.list
+		deb https://nginx.org/packages/mainline/ubuntu/ xenial nginx
+		deb-src https://nginx.org/packages/mainline/ubuntu/ xenial nginx
+	apt-get remove nginx-common
+	apt-get update
+	apt-get install nginx
+	verify in browser : localhost:80
+	
+	
+Install the Docker in linux
+	sudo apt-get update
+	
+	sudo apt-get install \
+	apt-transport-https \
+	curl \
+	software-properties-common
+	
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+	
+	sudo apt-key fingerprint 0EBFCD88
+	
+	sudo add-apt-repository \
+> "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+> $(lsb_release -cs) \
+> stable"
+
+Check web for the same
+
+
+Docker Commands
+	docker images
+		- show all the images
+	
+	docker build -t img_from .
+		build images from current directory .
+		-t img_from => tag to recognise by name
+		
+	Dockerfile (name of the docker file) / (No extension needed)
+	
+	docker run -itd --name cont_apache -p 8080:80 img_apache
+	
+	
+	
+	docker search python:3.6
+	docker search --filter "is-official=true" registry
+	docker search --format "table {{.Name}}\t{{.Description}}\t{{.IsOfficial}}" registry
+	
+	docker image ls
+	docker image
+	docker images ubuntu
+	docker images ubuntu:16.04
+	docker images --no-trunc ubuntu:16.04
+	
+	docker image pull nginx:latest
+	docker image pull nginx:alpine
+	docker image pull --all-tags nginx
+
+docker login
+docker tag nginx:latest subhamsingh510/repo-nginx:ss510-nginx
+
+docker image push subhamsingh510/repo-nginx:ss510-nginx
+
+
+docker image inspect ubuntu:16.04
+docker image inspect --format "{{.RepoTags}} : {{.RepoDigests}} " ubuntu:16.04
+docker image inspect --format "{{json .Config}} " ubuntu > inspect_report_ubuntu.txt
+
+docker image history unbuntu
+
+
+docker rmi 16666ff3a57f
+docker image rm nginx:alpine
+
+
+docker container create -it --name cc-busybox-A busybox:latest
+docker ps -a
+docker container run -itd --rm --name cc_busybox_B busybox:latest
+docker ps -a
+
+docker container stop cc_busybox_B
+docker container restart --time 5 cc-busybox-A
+docker container rename cc-busybox-A my-busybox
+
+docker ps -a
+docker container attach my-busybox
+ocker container start my-busybox
+docker exec -it my-busybox pwd
+
+
+docker container run -itd --name cont_nginx_expose -p 3000:80/tcp img_expose
+docker container run -itd --name cont_nginx-A -P img_expose
+docker container port cont_nginx-A
+
+
+docker container rm acf0295e0945 a763cfff1bde aed7ce5dde96 166cf0bcd72f 858357e3e88d 401bd0e6deac
+docker container rm my-busybox
+docker container rm my-busybox --force
+docker container kill --signal=SIGTERM cont_nginx_expose
+
+docker container prune
+
+Docker Networking
+	- https://www.udemy.com/course/docker-essentials/learn/lecture/12346170#overview
+	- https://www.udemy.com/course/docker-essentials/learn/lecture/12346172#overview
+	- https://www.udemy.com/course/docker-essentials/learn/lecture/12346188#overview
+	- https://www.udemy.com/course/docker-essentials/learn/lecture/12346180?start=210#overview
+	
+Docker storage
+  379  docker volume create vol-busybox
+  380  docker run -d --volume vol-ubuntu:/tmp ubuntu
+  381  docker volume ls
+  382  docker volume
+  383  docker volume ls
+  384  docker volume ls --filter "dangling=true"
+  385  docker volume inspect vol-ubuntu
+  386  docker volume rm vol-ubuntu
+  387  docker ps -a
+  388  docker container rm strange_hoover
+  389  docker volume rm vol-ubuntu
+  390  docker volume ls
+  391  docker run =itd --name cont-ubuntu --volume vol-ubuntu:/var/log ubuntu:latest
+  392  docker run -itd --name cont-ubuntu --volume vol-ubuntu:/var/log ubuntu:latest
+  393  docker volume ls
+  394  docker container ls
+  395  docker container inspect --format "{{json .Mounts}}" cont-ubuntu | python -m json.tool
+  396  python
+  397  docker container inspect --format "{{json .Mounts}}" cont-ubuntu | python3 -m json.tool
+  398  docker exec -it cont-ubuntu bash
+  399  docker stop cont-ubuntu
+  400  sudo su - # check the content of volume backup in host
+  
+  Inside the root user permission
+		cd /var/lib/docker/volumes
+   28  ls
+   29  cd vol-ubuntu
+   30  ls
+   31  cd _data/
+   32  ls
+   33  exit
+   34  history
+
